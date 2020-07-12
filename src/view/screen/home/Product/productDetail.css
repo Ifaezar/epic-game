@@ -1,0 +1,48 @@
+
+  .product-screen{
+    background: #121212;
+    min-height: 100vh;
+    align-items: center;
+    justify-content: center;
+  }
+
+  img{
+    height: 200px;
+  }
+
+  .game-btn{
+    width: 25%;
+    height: 50px;
+    margin-top: 30px;
+    background: #037bee;
+    color: #fff;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-weight: 700;
+    transition: .3s linear;
+    margin-right: 4px;
+  }
+  
+  .game-btn.active:hover{
+    opacity: .7;
+  }
+
+  span{
+    color: #fff;
+  }
+
+  .font-product{
+    color: #037bee;
+    font-size: 26px;
+  }
+
+  .wishlist{
+    visibility: hidden;
+    color: white;
+  }
+
+  .font-product:hover .wishlist{
+    visibility: visible;
+  }

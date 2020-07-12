@@ -1,0 +1,93 @@
+ .btn {
+    position: absolute;
+    width: 145px;
+    top: 87%;
+    left: 93%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    background-color: #121212;
+    color: white;
+    font-size: 13px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+
+  .btn:hover {
+    background-color: #121212;
+  }
+
+  .carousel {
+    width:540px;
+    height:360px;
+  }
+ 
+.slick-slide {
+    height    : 320px;
+    box-sizing: border-box;
+}
+
+.slick-slide img {
+    height    : 50%;
+    width     : 75%;
+    border    : 2.5px solid white;
+    box-sizing: border-box;
+}
+
+.slick-slide text {
+    font-size : 30pt;
+    height    : 50%;
+    width     : 75%;
+    border    : 2.5px solid white;
+    box-sizing: border-box;
+}
+
+.bg-color{
+  background-color: #121212;
+}
+
+.bg-color2{
+  background-color: #2a2a2a;
+}
+
+.card {
+  max-width: 200px;
+  background-color: #121212;
+  border: none;
+  color: #fff;
+  margin: auto;
+  font-family: arial;
+}
+
+.price {
+  color: #fff;
+  font-size: 22px;
+}
+
+.card img{
+  height: 200px;
+}
+
+.card h1{
+  font-size: 16px;
+  margin-bottom: 0;
+}
+
+.card h2{
+  font-size: 16px;
+  margin-top: 7px;
+}
+
+.card span{
+  font-size: 16px;
+  color: #2a2a2a;
+}
+
+.input-field { 
+  width: 200px; 
+  color: 121212;
+  background-color: #2a2a2a ;
+  border: none;
+  padding: 10px; 
+  text-align: center; 
+} 

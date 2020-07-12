@@ -1,0 +1,69 @@
+.history-screen{
+    background: #121212;
+    min-height: 100vh;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #customers {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  #customers td, #customers th {
+    border: 1px solid #ddd;
+    padding: 8px;
+    color:  #fff;
+  }
+  
+  #customers tr:nth-child(even){background-color:#2a2a2a;}
+  
+  #customers tr:hover {background-color: #121212;}
+  
+  #customers th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #2a2a2a;
+    color:  #fff;
+  }
+
+  #customers td img {
+    height: 100px;
+    width: 100px;
+  }
+
+  .collapse-item {
+    padding: 0 !important;
+    height: 0px;
+    opacity: 0;
+    transition: all 150ms ease-in-out;
+    visibility: collapse !important;
+  }
+  
+  .collapse-item:hover {
+    background:  #121212 !important;
+    cursor: default !important;
+  }
+  
+  .collapse-item img {
+    height: 160px;
+    object-fit: contain;
+    transition: all 150ms ease-in-out;
+    opacity: 0;
+  }
+  
+  .collapse-item.active img {
+    height: 160px;
+    object-fit: contain;
+    opacity: 1;
+    transition: all 150ms ease-in-out;
+  }
+  
+  .collapse-item.active {
+    height: 160px;
+    opacity: 1;
+    transition: all 150ms ease-in-out;
+    visibility: visible !important;
+  }
