@@ -37,7 +37,6 @@ class Account extends React.Component {
                 console.log(res.data);
             })
             .catch((err) => {
-                console.log("ERROR");
                 console.log(err);
             });
     };

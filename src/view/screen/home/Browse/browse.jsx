@@ -99,7 +99,6 @@ class Browse extends React.Component {
     }
 
     renderGame = () => {
-
         return (
             <div className="row">
                 {this.state.productGame.map(val => {
@@ -113,11 +112,21 @@ class Browse extends React.Component {
                                     <img src={val.picture} alt="" />
                                     <h1>{val.name}</h1>
                                     <span>{val.developer}</span>
-                                    <h2>{" "}
-                                        {new Intl.NumberFormat("id-ID", {
-                                            style: "currency",
-                                            currency: "IDR",
-                                        }).format(val.price)}{" "}</h2>
+                                    {
+                                        val.price == 0 ? (
+                                            <h2>FREE </h2>
+                                        ) : (
+                                                <h2>
+                                                    {" "}
+                                                    {
+                                                        new Intl.NumberFormat("id-ID", {
+                                                            style: "currency",
+                                                            currency: "IDR",
+                                                        }).format(val.price)
+                                                    }{" "}
+                                                </h2>
+                                            )
+                                    }
 
                                     <h1>{this.props.user.search}</h1>
                                 </div>
@@ -281,7 +290,7 @@ class Browse extends React.Component {
                     </div>
                     {this.renderGame()}
                     <input type="button" className="prev-btn" value="Previous" disabled={currentPage === 0 ? true : false} onClick={(e) => { this.prevHandler(e) }} />
-                    <input type="button" className="next-btn" value="Next" disabled={currentPage === totalPage ? true : false} onClick={(e) => { this.nextHandler(e) }} />
+                    <input type="button" className="next-btn" value="Next" disabled={currentPage === totalPage +1 ? true : false} onClick={(e) => { this.nextHandler(e) }} />
 
                 </div>
             </div>

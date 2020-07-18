@@ -89,21 +89,21 @@ class Navbar extends React.Component {
                                                 </DropdownItem>
                                                 <DropdownItem >
                                                     <div className="text-color mr-3">
-                                                        <a className="mr-3" href="/">
+                                                        <a className="mr-3" href="/admin/payment">
                                                             <span className="ml-2">Payments</span>
                                                         </a>
                                                     </div>
                                                 </DropdownItem>
                                                 <DropdownItem >
                                                     <div className="text-color mr-3">
-                                                        <a className="mr-3" href="/">
+                                                        <a className="mr-3" href="/admin/report">
                                                             <span className="ml-2">Page Reports</span>
                                                         </a>
                                                     </div>
                                                 </DropdownItem>
                                                 <DropdownItem >
                                                     <div className="text-color mr-3">
-                                                        <a className="mr-3" href="/" onClick={this.logOut}>
+                                                        <a className="mr-3" onClick={this.logOut}>
                                                             <span className="ml-2">Log Out</span>
                                                         </a>
                                                     </div>
@@ -141,7 +141,14 @@ class Navbar extends React.Component {
                                                     </DropdownItem>
                                                     <DropdownItem >
                                                         <div className="text-color mr-3">
-                                                            <a className="mr-3" href="/" onClick={this.logOut}>
+                                                            <a className="mr-3" href="/gameLibrary" >
+                                                                <span className="ml-2">Game Library</span>
+                                                            </a>
+                                                        </div>
+                                                    </DropdownItem>
+                                                    <DropdownItem >
+                                                        <div className="text-color mr-3">
+                                                            <a className="mr-3" onClick={this.logOut}>
                                                                 <span className="ml-2">Log Out</span>
                                                             </a>
                                                         </div>

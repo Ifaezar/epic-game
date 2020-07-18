@@ -1,13 +1,13 @@
+.bg-color{
+  background-color: #121212;
+}
+
 #customers {
     font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
     border-collapse: collapse;
     width: 100%;
   }
 
-  .bg-color{
-    background-color: #121212;
-  }
-  
   #customers td, #customers th {
     border: 1px solid #ddd;
     padding: 8px;
@@ -29,6 +29,28 @@
     height: 100px;
     width: 100px;
   }
+
+  #checkout {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 50%;
+  }
+  
+  #checkout td, #checkout tr {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  
+
+  #checkout tr {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #2a2a2a;
+    color:  #ddd;
+  }
+
+  
 
   .del-btn{
     width: 100%;

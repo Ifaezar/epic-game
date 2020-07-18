@@ -16,6 +16,7 @@ class AdminGame extends React.Component {
             developer: "",
             price: 0,
             picture: "",
+            stokAdmin: 0
 
         },
         editGame: {
@@ -24,11 +25,13 @@ class AdminGame extends React.Component {
             developer: "",
             price: 0,
             picture: "",
+            stokAdmin: 0
 
         },
         addCategory: "",
         category: [],
-        currentPage: 0
+        currentPage: 0,
+        stolAwal: 0
     }
 
     categoryHandler = (e, field) => {
@@ -54,17 +57,6 @@ class AdminGame extends React.Component {
         })
     }
 
-
-    addGame = () => {
-        Axios.post(`${API_URL}/game`, this.state.addGame)
-            .then((res) => {
-                console.log(res.data)
-                this.renderGame()
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
 
     getAllCategory = () => {
         Axios.get(`${API_URL}/category`)
@@ -104,6 +96,7 @@ class AdminGame extends React.Component {
                             currency: "IDR",
                         }).format(val.price)}{" "}</td>
                     <td><img src={val.picture} alt="" /></td>
+                    <td>{val.stokAdmin}</td>
                     <td>{val.category.map((value) => {
                         return (
                             <>
@@ -113,15 +106,15 @@ class AdminGame extends React.Component {
                                         className="ml-3"
                                         icon={faTimes}
                                         onClick={() => { this.deleteCategoryGame(idx, value.id) }}
-                                        style={{ color: "#2b2b2b", fontSize: "20px" }}>
+                                        style={{ color: "#fff", fontSize: "20px" }}>
                                     </FontAwesomeIcon>
                                 </ul>
                             </>
                         )
                     })}</td>
                     <td>
-                        <input type="button" className="edit-btn" value="EDIT" onClick={() => { this.editGameHandler(idx) }} />
-                        <input type="button" className="delete-btn" value="DELETE" onClick={() => { this.deleteGameClick(idx) }} /> </td>
+                        <input type="button" className="edit-btn" value="EDIT" onClick={() => { this.editGameHandler(idx, val.stokAdmin) }} />
+                        <input type="button" className="delete-btn" value="DELETE" onClick={() => { this.deleteGameClick(val.id) }} /> </td>
                 </tr>
             )
         })
@@ -134,6 +127,8 @@ class AdminGame extends React.Component {
                 Axios.post(`${API_URL}/game/${res.data.id}/categoryName/${this.state.addCategory}`)
                     .then((res) => {
                         console.log(res.data)
+                        this.getAllGame()
+                        this.renderGame()
                     })
 
                     .catch((err) => {
@@ -170,25 +165,30 @@ class AdminGame extends React.Component {
         this.renderGame()
     }
 
-    editGameHandler = (idx) => {
+    editGameHandler = (idx, stok) => {
         this.setState({
             editGame: {
                 ...this.state.productGame[idx]
-            }
+            },
+            stolAwal: stok
         })
     }
 
     editGameClick = () => {
-        Axios.put(`${API_URL}/game/edit`, this.state.editGame)
+        Axios.put(`${API_URL}/game/edit/${this.state.stolAwal}`, this.state.editGame)
             .then((res) => {
                 console.log(res.data)
-                Axios.post(`${API_URL}/game/${res.data.id}/categoryName/${this.state.addCategory}`)
-                    .then((res) => {
-                        console.log(res.data)
-                    })
-                    .catch((err) => {
-                        console.log(err)
-                    })
+                if (this.state.addCategory != "") {
+                    Axios.post(`${API_URL}/game/${res.data.id}/categoryName/${this.state.addCategory}`)
+                        .then((res) => {
+                            console.log(res.data)
+                            this.getAllGame()
+                            this.renderGame()
+                        })
+                        .catch((err) => {
+                            console.log(err)
+                        })
+                }
             })
             .catch((err) => {
                 console.log(err)
@@ -196,9 +196,11 @@ class AdminGame extends React.Component {
     }
 
     deleteGameClick = (idx) => {
-        Axios.delete(`${API_URL}/game/${idx + 1}`)
+        Axios.delete(`${API_URL}/game/${idx}`)
             .then((res) => {
                 console.log(res)
+                this.getAllGame()
+                this.renderGame()
             })
             .catch((err) => {
                 console.log(err)
@@ -210,6 +212,8 @@ class AdminGame extends React.Component {
         Axios.delete(`${API_URL}/game/${gameId + 1}/delete/${categoryId}`)
             .then((res) => {
                 console.log(res.data)
+                this.getAllGame()
+                this.renderGame()
             })
             .catch((err) => {
                 console.log(err)
@@ -217,93 +221,109 @@ class AdminGame extends React.Component {
     }
 
     render() {
-        const { name, developer, price, picture, description } = this.state.editGame
+        const { name, developer, price, picture, description, stokUser, stokAdmin } = this.state.editGame
         const { currentPage } = this.state
         const totalPage = this.state.productGame.length / 3
         return (
-            <div className="container">
+            <div>
                 <h1>LIST GAME</h1>
-                <table id="customers">
-                    <tr>
-                        <th>no</th>
-                        <th>Game Name</th>
-                        <th>Developer</th>
-                        <th>Price</th>
-                        <th>Picture</th>
-                        <th>Category</th>
-                    </tr>
-                    {this.renderGame()}
+                <div className="row">
+                    <div className="col-8">
+                        <table id="customers">
+                            <tr>
+                                <th>no</th>
+                                <th>Game Name</th>
+                                <th>Developer</th>
+                                <th>Price</th>
+                                <th>Picture</th>
+                                <th>Stok</th>
+                                <th>Category</th>
+                                <th>Action</th>
+                            </tr>
+                            {this.renderGame()}
 
-                </table>
-                <input type="button" className="prev-btn" value="First Page" onClick={() => { this.getAllGame(0) }} />
-                <input type="button" className="next-btn" value="Next" disabled={currentPage === totalPage ? true : false} onClick={(e) => { this.nextHandler(e) }} />
-                <input type="button" className="prev-btn" value="Previous" disabled={currentPage === 0 ? true : false} onClick={(e) => { this.prevHandler(e) }} />
-                <input type="button" className="next-btn" value="Last Page" onClick={() => { this.getAllGame(totalPage) }} />
-                <div>
-                    <input type="button" className="prev-btn" value="ADD GAME" id="toggler" />
-                    <UncontrolledCollapse toggler="#toggler">
-                        <card>
-                            <cardBody>
-                                <div className="product-form">
-                                    <div className="textbox">
-                                        <input type="text" placeholder="Game Name" onChange={(e) => this.inputHandler(e, "name", "addGame")} />
-                                    </div>
-                                    <div className="textbox">
-                                        <input type="text" placeholder="Developer" onChange={(e) => this.inputHandler(e, "developer", "addGame")} />
-                                    </div>
-                                    <div className="textbox">
-                                        <input type="text" placeholder="Price" onChange={(e) => this.inputHandler(e, "price", "addGame")} />
-                                    </div>
-                                    <div className="textbox">
-                                        <input type="text" placeholder="Picture" onChange={(e) => this.inputHandler(e, "picture", "addGame")} />
-                                    </div>
-                                    <div className="textbox">
-                                        <input type="text" placeholder="Description" onChange={(e) => this.inputHandler(e, "description", "addGame")} />
-                                    </div>
-                                    <div className="textbox">
-                                        <input type="date"  />
-                                    </div>
-                                    <div className="textbox">
-                                        {this.categoryOption()}
-                                    </div>
-                                    <input type="button" className="save-btn" value="ADD GAME" onClick={this.addGameButton} />
-                                    <h1>{this.state.addCategory}</h1>
-                                </div>
-                            </cardBody>
-                        </card>
-                    </UncontrolledCollapse>
+                        </table>
+                        <input type="button" className="prev-btn" value="First Page" onClick={() => { this.getAllGame(0) }} />
+                        <input type="button" className="next-btn" value="Previous" disabled={currentPage === 0 ? true : false} onClick={(e) => { this.prevHandler(e) }} />
+                        <input type="button" className="prev-btn" value="Next" disabled={currentPage === totalPage + 1 ? true : false} onClick={(e) => { this.nextHandler(e) }} />
+                        <input type="button" className="next-btn" value="Last Page" onClick={() => { this.getAllGame(totalPage + 1) }} />
+                    </div>
+                    <div className="col-4">
+                            <div>
+                                <input type="button" style={{ width: "50%" }} className="prev-btn" value="ADD GAME" id="toggler" />
+                                <UncontrolledCollapse toggler="#toggler">
+                                    <card>
+                                        <cardBody>
+                                            <div className="product-form">
+                                                <div className="textbox">
+                                                    <input type="text" placeholder="Game Name" onChange={(e) => this.inputHandler(e, "name", "addGame")} />
+                                                </div>
+                                                <div className="textbox">
+                                                    <input type="text" placeholder="Developer" onChange={(e) => this.inputHandler(e, "developer", "addGame")} />
+                                                </div>
+                                                <div className="textbox">
+                                                    <input type="text" placeholder="Price" onChange={(e) => this.inputHandler(e, "price", "addGame")} />
+                                                </div>
+                                                <div className="textbox">
+                                                    <input type="text" placeholder="Picture" onChange={(e) => this.inputHandler(e, "picture", "addGame")} />
+                                                </div>
+                                                <div className="textbox">
+                                                    <input type="text" placeholder="Description" onChange={(e) => this.inputHandler(e, "description", "addGame")} />
+                                                </div>
+                                                <div className="textbox">
+                                                    <input type="text" placeholder="Stok" onChange={(e) => this.inputHandler(e, "stokAdmin", "addGame")} />
+                                                </div>
+
+                                                <div className="textbox">
+                                                    {this.categoryOption()}
+                                                </div>
+                                                <input type="button" className="save-btn" value="ADD GAME" onClick={this.addGameButton} />
+                                                <h1>{this.state.addCategory}</h1>
+                                            </div>
+                                        </cardBody>
+                                    </card>
+                                </UncontrolledCollapse>
+                            </div>
+                            <div>
+                                <input type="button" style={{ width: "50%" }} className="prev-btn" value="EDIT GAME" id="toggler2" />
+                                <UncontrolledCollapse toggler="#toggler2">
+                                    <card>
+                                        <cardBody>
+                                            <div className="product-form">
+                                                <div className="textbox">
+                                                    <input type="text" value={name} placeholder="Name" onChange={(e) => this.inputHandler(e, "name", "editGame")} />
+                                                </div>
+                                                <div className="textbox">
+                                                    <input type="text" value={developer} placeholder="Developer" onChange={(e) => this.inputHandler(e, "developer", "editGame")} />
+                                                </div>
+                                                <div className="textbox">
+                                                    <input type="text" value={price} placeholder="Price" onChange={(e) => this.inputHandler(e, "price", "editGame")} />
+                                                </div>
+                                                <div className="textbox">
+                                                    <input type="text" value={picture} placeholder="Picture" onChange={(e) => this.inputHandler(e, "picture", "editGame")} />
+                                                </div>
+                                                <div className="textbox">
+                                                    <input type="text" value={description} placeholder="Description" onChange={(e) => this.inputHandler(e, "description", "editGame")} />
+                                                </div>
+                                                <div className="textbox">
+                                                    <input type="text" placeholder="Stok" onChange={(e) => this.inputHandler(e, "stokAdmin", "editGame")} />
+                                                </div>
+
+                                                <div className="textbox">
+                                                    {this.categoryOption()}
+                                                </div>
+                                                <input type="button" className="save-btn" value="SAVE GAME" onClick={this.editGameClick} />
+                                            </div>
+                                        </cardBody>
+                                    </card>
+                                </UncontrolledCollapse>
+                            
+                        </div>
+                    </div>
                 </div>
 
-                <div>
-                    <input type="button" className="prev-btn" value="EDIT GAME" id="toggler2" />
-                    <UncontrolledCollapse toggler="#toggler2">
-                        <card>
-                            <cardBody>
-                                <div className="product-form">
-                                    <div className="textbox">
-                                        <input type="text" value={name} placeholder="Name" onChange={(e) => this.inputHandler(e, "name", "editGame")} />
-                                    </div>
-                                    <div className="textbox">
-                                        <input type="text" value={developer} placeholder="Developer" onChange={(e) => this.inputHandler(e, "developer", "editGame")} />
-                                    </div>
-                                    <div className="textbox">
-                                        <input type="text" value={price} placeholder="Price" onChange={(e) => this.inputHandler(e, "price", "editGame")} />
-                                    </div>
-                                    <div className="textbox">
-                                        <input type="text" value={picture} placeholder="Picture" onChange={(e) => this.inputHandler(e, "picture", "editGame")} />
-                                    </div>
-                                    <div className="textbox">
-                                        <input type="text" value={description} placeholder="Description" onChange={(e) => this.inputHandler(e, "description", "editGame")} />
-                                    </div>
-                                    <div className="textbox">
-                                        {this.categoryOption()}
-                                    </div>
-                                    <input type="button" className="save-btn" value="SAVE GAME" onClick={this.editGameClick} />
-                                </div>
-                            </cardBody>
-                        </card>
-                    </UncontrolledCollapse>
-                </div>
+
+
             </div>
         )
     }

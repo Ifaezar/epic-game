@@ -11,11 +11,16 @@ class ProductDetail extends React.Component {
     state = {
         game: [],
         cart: {
-            edition: "basic"
+            edition: "basic",
+            quantity: 1
         }
     }
 
     componentDidMount() {
+        this.getGameById()
+    }
+
+    getGameById = () => {
         Axios.get(`${API_URL}/game/${this.props.match.params.id}`, this.state.cart)
             .then((res) => {
                 console.log(res.data)
@@ -29,13 +34,46 @@ class ProductDetail extends React.Component {
 
 
     cartClick = (gameId) => {
-        Axios.post(`${API_URL}/cart/addToCart/${this.props.user.id}/${gameId}`, this.state.cart)
+        Axios.get(`${API_URL}/cart/${this.props.user.id}`)
             .then((res) => {
-                console.log(res.data)
+                if (res.data.length == 0) {
+                    Axios.post(`${API_URL}/cart/addToCart/${this.props.user.id}/${gameId}`, this.state.cart)
+                        .then((res) => {
+                            console.log(res.data)
+                            this.getGameById()
+                        })
+                        .catch((err) => {
+                            console.log(err)
+                        })
+                } else {
+                    res.data.map((val, idx) => {
+                        if (gameId == val.game.id) {
+                            Axios.put(`${API_URL}/cart/addToCartSameId/${this.props.user.id}/${gameId}/${val.id}`, this.state.cart)
+                                .then((res) => {
+                                    console.log(res.data)
+                                    this.getGameById()
+                                })
+                                .catch((err) => {
+                                    console.log(err)
+                                })
+                        } else if ((idx + 1) == res.data.length) {
+                            Axios.post(`${API_URL}/cart/addToCart/${this.props.user.id}/${gameId}`, this.state.cart)
+                                .then((res) => {
+                                    console.log(res.data)
+                                    this.getGameById()
+                                })
+                                .catch((err) => {
+                                    console.log(err)
+                                })
+                        }
+                    })
+
+                }
             })
             .catch((err) => {
                 console.log(err)
             })
+
     }
 
     render() {
@@ -52,9 +90,35 @@ class ProductDetail extends React.Component {
                         </div>
                         <div className="col-4">
                             <div>
-                                <input className="game-btn" type="button" onClick={() => { this.cartClick(game.id) }} value="Get" />
+                                <span>stok : {game.stokUser}</span>
                             </div>
-                            <div  className="font-product mt-3">
+                            <div>
+                                {
+                                    game.price == 0 ? (
+                                        <span>FREE</span>
+                                    ) : (
+                                            <span>{" "}
+                                                {
+                                                    new Intl.NumberFormat("id-ID", {
+                                                        style: "currency",
+                                                        currency: "IDR",
+                                                    }).format(game.price)
+                                                }{" "}</span>
+                                        )
+                                }
+
+                            </div>
+                            <div>
+                                {
+                                    game.stokUser <= 0 ? (
+                                        <span>Mohon Maaf Stok Game Habis</span>
+                                    ) : (
+                                            <input className="game-btn" type="button" onClick={() => { this.cartClick(game.id) }} value="Get" />
+                                        )
+                                }
+
+                            </div>
+                            <div className="font-product mt-3">
                                 <a>
                                     <FontAwesomeIcon
                                         className="font-product mt-3"
@@ -71,6 +135,7 @@ class ProductDetail extends React.Component {
                     <div className="row">
                         <div className="col-4">
                             <span>About Game</span>
+
                         </div>
                         <div className="col-4">
                             <span>{game.developer}</span>
@@ -78,7 +143,7 @@ class ProductDetail extends React.Component {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div >
         )
     }
 }

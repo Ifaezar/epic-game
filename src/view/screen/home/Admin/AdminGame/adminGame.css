@@ -149,3 +149,39 @@
     opacity: .7;
   }
 
+
+  .upload-btn{
+    width: 50%;
+    height: 50px;
+    background:  #2b2b2b;
+    color: #fff;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-weight: 700;
+    transition: .3s linear;
+    
+  }
+  
+  .upload-btn.active:hover{
+    opacity: .7;
+  }
+
+  .reject-btn{
+    width: 50%;
+    height: 50px;
+    background:  red;
+    color: #fff;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-weight: 700;
+    transition: .3s linear;
+    
+  }
+  
+  .reject-btn.active:hover{
+    opacity: .7;
+  }

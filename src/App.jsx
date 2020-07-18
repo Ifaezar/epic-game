@@ -25,6 +25,10 @@ import Cart from './view/screen/home/user/account/Cart/cart';
 import ForgotPassword from './view/screen/home/user/account/ForgotPassword/forgotPassword';
 import NewPassword from './view/screen/home/user/account/ForgotPassword/newPassword';
 import History from './view/screen/home/user/account/History/history';
+import AdminPayment from './view/screen/home/Admin/AdminGame/adminPayment';
+import GameLibrary from './view/screen/home/user/account/GameLibrary/gameLibrary';
+import SendGame from './view/screen/home/user/account/GameLibrary/sendGame';
+import AdminReports from './view/screen/home/Admin/AdminGame/adminReports';
 
 const cookieObject = new Cookie()
 
@@ -70,11 +74,15 @@ class App extends React.Component {
           <Route exact path="/product/:id" component={ProductDetail} />
           {this.renderUserRoute()}
           <Route exact path="/account" component={Account} />
+          <Route exact path="/gameLibrary" component={GameLibrary} />
+          <Route exact path="/sendGame/:gameLibraryId" component={SendGame} />
           <Route exact path="/cart" component={Cart} />
           <Route exact path="/history" component={History} />
           {this.renderAdminRoute()}
           <Route exact path="/admin/listgame" component={AdminGame} />
+          <Route exact path="/admin/report" component={AdminReports} />
           <Route exact path="/admin/listmember" component={AdminMember} />
+          <Route exact path="/admin/payment" component={AdminPayment} />
           <Route exact path="*" component={PageNotFound} />
         </Switch>
       </>
