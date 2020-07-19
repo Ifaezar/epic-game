@@ -11,6 +11,7 @@ import swal from 'sweetalert'
 class AdminGame extends React.Component {
     state = {
         productGame: [],
+        active: [],
         addGame: {
             name: "",
             description: "",
@@ -28,6 +29,12 @@ class AdminGame extends React.Component {
             picture: "",
             stokAdmin: 0
 
+        },
+        editPacket: {
+            paketName: "",
+            stock: "",
+            image: "",
+            totalPrice: 0,
         },
         gamePacket: {
             paketName: '',
@@ -140,22 +147,76 @@ class AdminGame extends React.Component {
     renderGamePacket = () => {
         return this.state.packetList.map((val, idx) => {
             return (
-                <tr>
-                    <td>{idx + 1}</td>
-                    <td>{val.paketName}</td>
-                    <td>
-                        {" "}
-                        {new Intl.NumberFormat("id-ID", {
-                            style: "currency",
-                            currency: "IDR",
-                        }).format(val.totalPrice)}{" "}</td>
-                    <td>{val.stock}</td>
-                    <td>
-                        <input type="button" className="edit-btn" value="EDIT" onClick={() => { this.editGameHandler(idx, val.stokAdmin) }} />
-                        <input type="button" className="delete-btn" value="DELETE" onClick={() => { this.deleteGameClick(val.id) }} /> </td>
-                </tr>
+                <>
+                    <tr
+                        onClick={() => {
+                            if (this.state.active.includes(idx)) {
+                                this.setState({
+                                    active: [
+                                        ...this.state.active.filter((item) => item !== idx),
+                                    ],
+                                });
+                            } else {
+                                this.setState({
+                                    active: [...this.state.active, idx],
+                                });
+                            }
+                        }}
+                    >
+                        <td>{idx + 1}</td>
+                        <td>{val.paketName}</td>
+                        <td>
+                            {" "}
+                            {new Intl.NumberFormat("id-ID", {
+                                style: "currency",
+                                currency: "IDR",
+                            }).format(val.totalPrice)}{" "}</td>
+                        <td>{val.stock}</td>
+                        <td>
+                            <input type="button" className="delete-btn" value="DELETE" onClick={() => { this.deletePaketClick(val.id) }} /> </td>
+                    </tr>
+                    {
+                        val.paketDetail.map(value => {
+                            return (
+                                <tr className={`collapse-item ${
+                                    this.state.active.includes(idx) ? "active" : null
+                                    }`}>
+                                    <td className="" colSpan={3}>
+                                        <div className="d-flex align-items-center">
+                                            <img src={value.game.picture} alt="" />
+                                            <div className="d-flex flex-column ml-4 justify-content-center">
+                                                <h5>{value.game.name}</h5>
+                                                <h5>{new Intl.NumberFormat("id-ID", {
+                                                    style: "currency",
+                                                    currency: "IDR",
+                                                }).format(value.game.price)}{" "}</h5>
+                                                <h5>{value.quantity}</h5>
+                                                <h5>{value.priceProduct}</h5>
+                                                <h5>{value.edition}</h5>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            )
+                        })
+                    }
+                </>
             )
         })
+    }
+
+    deletePaketClick = (id) => {
+        Axios.delete(`${API_URL}/paket/${id}`)
+            .then(res => {
+                this.getAllPacket()
+                this.renderGamePacket()
+                swal("Success", "Delete Game", "success")
+            })
+            .catch(err => {
+                console.log(err)
+            })
     }
 
     addGameButton = () => {
@@ -243,15 +304,26 @@ class AdminGame extends React.Component {
         })
     }
 
+    editPaketHandler = (idx) => {
+        this.setState({
+            editPacket: {
+                ...this.state.packetList[idx]
+            }
+        })
+    }
+
     editGameClick = () => {
         Axios.put(`${API_URL}/game/edit/${this.state.stolAwal}`, this.state.editGame)
             .then((res) => {
                 console.log(res.data)
+                this.getAllGame()
+                this.renderGame()
+                swal("Success", "Edit Game", "success")
                 if (this.state.addCategory != "") {
                     Axios.post(`${API_URL}/game/${res.data.id}/categoryName/${this.state.addCategory}`)
                         .then((res) => {
                             console.log(res.data)
-                            swal("Success", "Edit Game", "success")
+
                             this.getAllGame()
                             this.renderGame()
                         })
@@ -466,13 +538,10 @@ class AdminGame extends React.Component {
                                     </cardBody>
                                 </card>
                             </UncontrolledCollapse>
-
                         </div>
                     </div>
                 </div>
-
-
-
+                <h1>{this.state.editPacket.paketName}</h1>
             </div>
         )
     }

@@ -106,7 +106,7 @@ class ProductDetail extends React.Component {
                 <div className="container">
                     <div className="row">
                         <div className="col-4">
-                            <img src={game.picture} alt="" />
+                            <img src={game.picture} style={{width:"100%", height:"400px"}} alt="" />
                         </div>
                         <div className="col-4">
                             <span>{game.description}</span>
@@ -149,7 +149,7 @@ class ProductDetail extends React.Component {
                                     >
                                     </FontAwesomeIcon>
                                 </a>
-                                <span className="wishlist">Add To Wishlist</span>
+                                <span className="ml-3 wishlist">Add To Wishlist</span>
 
                             </div>
 
@@ -161,6 +161,7 @@ class ProductDetail extends React.Component {
 
                         </div>
                         <div className="col-4">
+                            <h4 style={{color:"#fff"}}>Developer</h4>
                             <span>{game.developer}</span>
 
                         </div>

@@ -39,10 +39,10 @@ class ChangePassword extends React.Component {
                             <input type="text" placeholder="Username" onChange={(e) => { this.inputHandler(e, "username") }} />
                         </div>
                         <div className="textbox">
-                            <input type="text" placeholder="Old Password" onChange={(e) => { this.inputHandler(e, "oldPassword") }} />
+                            <input type="password" placeholder="Old Password" onChange={(e) => { this.inputHandler(e, "oldPassword") }} />
                         </div>
                         <div className="textbox">
-                            <input type="text" placeholder="New Password" onChange={(e) => { this.inputHandler(e, "newPassword") }} />
+                            <input type="password" placeholder="New Password" onChange={(e) => { this.inputHandler(e, "newPassword") }} />
                         </div>
                         <input type="button" value="Change Password" className="login-btn active" onClick={this.changePassword} ></input>
 

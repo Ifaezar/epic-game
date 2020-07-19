@@ -2,6 +2,7 @@ import React from "react";
 import "../AdminGame/adminGame.css"
 import Axios from "axios";
 import { API_URL } from "../../../../../redux/API";
+import swal from "sweetalert";
 
 class AdminMember extends React.Component {
     state = {
@@ -10,10 +11,11 @@ class AdminMember extends React.Component {
             name: '',
             email: '',
             username: '',
-            address:'',
-            telp:0
+            address: '',
+            telp: 0
         },
-        currentPage: 0
+        currentPage: 0,
+        totalPage: 0
     }
 
     componentDidMount() {
@@ -21,11 +23,11 @@ class AdminMember extends React.Component {
     }
 
 
-    inputHandler = (e, field) => {
+    inputHandler = (e, field, form) => {
         const { value } = e.target
         this.setState({
-            editMember: {
-                ...this.state.editMember,
+            [form]: {
+                ...this.state[form],
                 [field]: value
             }
         })
@@ -41,7 +43,7 @@ class AdminMember extends React.Component {
 
     getAllUser = (currentPage) => {
         currentPage = currentPage
-        Axios.get(`${API_URL}/users/user?page=${currentPage}&size=2`)
+        Axios.get(`${API_URL}/users/user?page=${currentPage}&size=4`)
             .then((res) => {
                 console.log(res.data.content)
                 this.setState({ memberList: res.data.content })
@@ -50,15 +52,25 @@ class AdminMember extends React.Component {
             .catch((err) => {
                 console.log(err)
             })
+
+        Axios.get(`${API_URL}/users`)
+            .then(res => {
+                this.setState({ totalPage: (Math.floor(res.data.length / 4)) })
+            })
+            .catch(err => {
+                console.log(err)
+            })
     }
 
     saveEdit = () => {
         Axios.put(`${API_URL}/users/editProfile`, this.state.editMember)
             .then((res) => {
                 console.log(res.data)
+                this.getAllUser(this.state.currentPage)
+                swal("Success", "User Edited", "success")
             })
             .catch((err) => {
-                console.log(err.data)
+                console.log(err)
             })
 
     }
@@ -67,6 +79,8 @@ class AdminMember extends React.Component {
         Axios.delete(`${API_URL}/users/${id}`)
             .then((res) => {
                 console.log(res.data)
+                this.getAllUser(this.state.currentPage)
+                swal("Success", "Delete User", "success")
             })
             .catch((err) => {
                 console.log(err)
@@ -84,8 +98,9 @@ class AdminMember extends React.Component {
                     <td>{val.address}</td>
                     <td>{val.telp}</td>
                     <td>
+                        <input type="button" className="delete-btn" value="DELETE" onClick={() => { this.deleteClick(val.id) }} />
                         <input type="button" className="edit-btn" value="EDIT" onClick={() => { this.editClick(idx) }} />
-                        <input type="button" className="delete-btn" value="DELETE" onClick={() => { this.deleteClick(val.id) }} /> </td>
+                    </td>
                 </tr>
             )
         })
@@ -100,9 +115,8 @@ class AdminMember extends React.Component {
     }
 
     render() {
-        const { name, email, username } = this.state.editMember
-        const { currentPage } = this.state
-        const totalPage = this.state.memberList.length / 2
+        const { name, email, username, address, telp } = this.state.editMember
+        const { currentPage, totalPage } = this.state
         return (
             <div className="container">
                 <h1>LIST Member</h1>
@@ -114,31 +128,32 @@ class AdminMember extends React.Component {
                         <th>Email</th>
                         <th>Address</th>
                         <th>Telp No</th>
+                        <th>Action</th>
                     </tr>
                     {this.renderUser()}
                 </table>
 
-                <input type="button" className="next-btn" value="Next" disabled ={currentPage === totalPage ? true : false} onClick={(e) => { this.nextHandler(e) }} />
+                <input type="button" className="prev-btn mr-5" value="Previous" disabled={currentPage === 0 ? true : false} onClick={(e) => { this.prevHandler(e) }} />
+                <input type="button" className="next-btn" value="Next" disabled={currentPage === totalPage ? true : false} onClick={(e) => { this.nextHandler(e) }} />
 
-                <input type="button" className="prev-btn" value="Previous" disabled ={currentPage === 0 ? true : false} onClick={(e) => { this.prevHandler(e) }} />
 
 
                 <h1>EDIT USER</h1>
                 <div className="product-form">
                     <div className="textbox">
-                        <input type="text" value={name} placeholder="Name" onChange={(e) => this.inputHandler(e, "name")} />
+                        <input type="text" value={name} placeholder="Name" onChange={(e) => this.inputHandler(e, "name", "editMember")} />
                     </div>
                     <div className="textbox">
-                        <input type="text" value={username} placeholder="Username" onChange={(e) => this.inputHandler(e, "username")} />
+                        <input type="text" value={username} placeholder="Username" onChange={(e) => this.inputHandler(e, "username", "editMember")} />
                     </div>
                     <div className="textbox">
-                        <input type="text" value={email} placeholder="Email" onChange={(e) => this.inputHandler(e, "email")} />
+                        <input type="text" value={email} placeholder="Email" onChange={(e) => this.inputHandler(e, "email", "editMember")} />
                     </div>
                     <div className="textbox">
-                        <input type="text" value={email} placeholder="Address" onChange={(e) => this.inputHandler(e, "addres")} />
+                        <input type="text" value={address} placeholder="Address" onChange={(e) => this.inputHandler(e, "address", "editMember")} />
                     </div>
                     <div className="textbox">
-                        <input type="text" value={email} placeholder="Telephone Number" onChange={(e) => this.inputHandler(e, "telp")} />
+                        <input type="text" value={telp} placeholder="Telephone Number" onChange={(e) => this.inputHandler(e, "telp", "editMember")} />
                     </div>
                     <input type="button" className="save-btn" value="SAVE CHANGE" onClick={this.saveEdit} />
 

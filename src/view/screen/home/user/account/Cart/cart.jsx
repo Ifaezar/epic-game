@@ -90,6 +90,7 @@ class Cart extends React.Component {
             })
                 .then((res) => {
                     console.log(res.data.id)
+                    swal("Success", "Add to Transaction", "success")
                     this.state.cartList.map((val => {
                         console.log(val.id)
                         Axios.post(`${API_URL}/transactionDetail/${res.data.id}/${val.game.id}`, this.state.transactionDetailLis, {
@@ -185,7 +186,7 @@ class Cart extends React.Component {
                         {
                             < UncontrolledCollapse toggler="#toggler">
                                 {
-                                    this.state.cartList.map(val => {
+                                    this.state.cartList.map((val, idx) => {
                                         if (val.edition == "paket") {
                                             return (
                                                 <>
@@ -218,7 +219,7 @@ class Cart extends React.Component {
                                                     </table>
                                                 </>
                                             )
-                                        } else {
+                                        } else if(this.state.cartList.length == idx+1){
                                             return (
                                                 <card>
                                                     <cardBody>
@@ -255,7 +256,6 @@ class Cart extends React.Component {
                                                                 style: "currency",
                                                                 currency: "IDR",
                                                             }).format(this.totalPriceCount())}{" "}</h1>
-                                                        <input type="button" className="checkout-btn" value="Confrim" onClick={() => this.confirmClick()} />
                                                     </cardBody >
                                                 </card >
                                             )

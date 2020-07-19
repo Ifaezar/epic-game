@@ -2,6 +2,7 @@ import React from "react"
 import Axios from "axios"
 import { API_URL } from "../../../../redux/API"
 import { connect } from 'react-redux'
+import swal from "sweetalert"
 
 class PacketGame extends React.Component {
     state = {
@@ -37,12 +38,12 @@ class PacketGame extends React.Component {
 
     addToCart = () => {
         Axios.post(`${API_URL}/cart/addPacketToCart/${this.props.user.id}/${this.props.match.params.id}`, this.state.cart)
-        .then((res) =>{
-            console.log(res.data)
-        })
-        .catch((err) =>{
-            console.log(err)
-        })
+            .then((res) => {
+                console.log(res.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
     }
 
     renderPaket = () => {
@@ -51,7 +52,7 @@ class PacketGame extends React.Component {
                 <div>
                     <div className="row">
                         <div className="col-4">
-                            <h4 style={{ color: "white" }}>Packet Name : {this.state.packetGame.paketName}</h4>
+                            <h4 style={{ color: "white" }}>{this.state.packetGame.paketName}</h4>
                         </div>
                         <div className="col-4">
                             <h4 style={{ color: "white" }}> {
@@ -97,7 +98,17 @@ class PacketGame extends React.Component {
                                 )
                             })
                         }
-                        <input className="game-btn" type="button" onClick={this.addToCart} value="Get" />
+                        <div className="col-4">
+                            <span className="mr-5">Stock = {this.state.packetGame.stock}</span>
+                            {
+                                this.state.packetGame.stock == 0 ? (
+                                    <h1 style={{color:"#fff"}}>Maaf Stok Habis</h1>
+                                ) : (
+                                        <input className="game-btn" type="button" onClick={this.addToCart} value="Get" />
+
+                                    )
+                            }
+                        </div>
                     </div>
                 </div>
 

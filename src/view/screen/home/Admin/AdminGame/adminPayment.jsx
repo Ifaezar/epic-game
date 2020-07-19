@@ -140,7 +140,10 @@ class AdminPayment extends React.Component {
                                                 currency: "IDR",
                                             }).format(value.game.price)}{" "}</h5>
                                             <h5>{value.quantity}</h5>
-                                            <h5>{value.priceProduct}</h5>
+                                            <h5>{new Intl.NumberFormat("id-ID", {
+                                                style: "currency",
+                                                currency: "IDR",
+                                            }).format(value.priceProduct)}{" "}</h5>
                                             <h5>{value.edition}</h5>
                                         </div>
                                     </div>
@@ -163,8 +166,17 @@ class AdminPayment extends React.Component {
                             </div>
                             <div>
                                 {
-                                    this.state.transactionList[this.state.index].status == "Accept" ? (
-                                        <h4>Proses transaksi selesai</h4>
+                                    this.state.index != 0 ? (
+                                        this.state.transactionList[this.state.index].status == "Accept" ? (
+                                            <h4>Proses transaksi selesai</h4>
+                                        ) : (
+                                                <>
+                                                    <input type="button" onClick={this.acceptHandler} className="upload-btn" value="Accept" />
+                                                    <br></br>
+                                                    <br></br>
+                                                    <input type="button" onClick={this.rejectHandler} className="reject-btn" value="Reject" />
+                                                </>
+                                            )
                                     ) : (
                                             <>
                                                 <input type="button" onClick={this.acceptHandler} className="upload-btn" value="Accept" />
@@ -191,11 +203,11 @@ class AdminPayment extends React.Component {
                 <h1>Payment List</h1>
                 <div className="container row ">
                     <div className="col-6 status">
-                        <input type="button" onClick={this.getAllTransaction} className="status-btn" value="Pending"/>
-                       
+                        <input type="button" onClick={this.getAllTransaction} className="status-btn" value="Pending" />
+
                     </div>
                     <div className="col-6">
-                    <input type="button" onClick={this.getAllTransactionAccept} className="status-btn" value="Accept"/>
+                        <input type="button" onClick={this.getAllTransactionAccept} className="status-btn" value="Accept" />
                     </div>
                 </div>
                 <table id="customers">

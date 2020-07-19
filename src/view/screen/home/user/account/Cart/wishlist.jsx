@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { API_URL } from '../../../../../../redux/API'
 import Axios from 'axios'
 import "./cart.css"
-
+import swal from 'sweetalert'
 
 class Wishlist extends React.Component {
     state = {
@@ -42,6 +42,19 @@ class Wishlist extends React.Component {
             .catch((err) => {
                 console.log(err)
             })
+    }
+
+    deleteWishlist = (id) =>{
+        Axios.delete(`${API_URL}/wishlist/delete/${id}`)
+        .then(res =>{
+            console.log(res.data)
+            swal("Success", "Delete From Wishlist", "success")
+            this.getAllWishlist()
+
+        })
+        .catch(err =>{
+            console.log(err)
+        })
     }
 
     render() {
@@ -85,7 +98,8 @@ class Wishlist extends React.Component {
                                                         currency: "IDR",
                                                     }).format(val.game.price)}{" "}</td>
                                                 <td>
-                                                    <input type="button" className="del-btn" onClick={() => { this.addTocart(val.id, val.game.id) }} value="Add To Cart" />
+                                                    <input type="button" style={{width:"60%"}} className="edit-btn" onClick={() => { this.addTocart(val.id, val.game.id) }} value="Add To Cart" />
+                                                    <input type="button" style={{width:"60%"}} className="del-btn" onClick={() => { this.deleteWishlist(val.id) }} value="Delete Wishlist" />
                                                 </td>
                                             </tr>
                                         </>

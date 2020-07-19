@@ -3,7 +3,7 @@ import './gameLibrary.css'
 import { connect } from 'react-redux'
 import Axios from 'axios'
 import { API_URL } from '../../../../../../redux/API'
-
+import swal from 'sweetalert'
 
 class SendGame extends React.Component {
     state = {
@@ -36,7 +36,7 @@ class SendGame extends React.Component {
         Axios.post(`${API_URL}/gameLibrary/addToFriend/${this.props.match.params.gameLibraryId}/${this.state.email}`, this.state.gameLibrary)
         .then((res) =>{
             console.log(res.data)
-            alert("sukses")
+            swal("Success", "Send Game Success", "success")
         })
         .catch((err) =>{
             console.log(err)

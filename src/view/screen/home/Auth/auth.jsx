@@ -66,7 +66,7 @@ class AuthScreen extends React.Component {
                             <span className="check-message hidden">Required</span>
                         </div>
                         <div className="textbox">
-                            <input type="text" placeholder="Password" onChange={(e) => { this.inputHandler(e, "password") }} />
+                            <input type="password" placeholder="Password" onChange={(e) => { this.inputHandler(e, "password") }} />
                             <span className="check-message hidden">Required</span>
                         </div>
                         <div className="options">

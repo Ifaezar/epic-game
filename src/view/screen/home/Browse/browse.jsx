@@ -15,7 +15,8 @@ class Browse extends React.Component {
         sortBy: "ALL",
         orderBy: 0,
         currentPage: 0,
-        search: ""
+        search: "",
+        totalPage: 0
 
     }
 
@@ -47,8 +48,18 @@ class Browse extends React.Component {
     componentDidMount() {
         this.getAllGame(this.state.currentPage)
         this.getAllCategory()
+        this.getGame()
     }
 
+    getGame = () =>{
+        Axios.get(`${API_URL}/game`)
+        .then(res =>{
+            this.setState({ totalPage: (Math.floor(res.data.length / 5)) })
+        })
+        .catch(err =>{
+            console.log(err)
+        })
+    }
 
     categoryHandler = (e) => {
         const { value } = e.target
@@ -88,11 +99,12 @@ class Browse extends React.Component {
     }
 
     getAllGame = (currentPage) => {
-        Axios.get(`${API_URL}/game/gamesPage?page=${currentPage}&size=3`)
+        Axios.get(`${API_URL}/game/gamesPage?page=${currentPage}&size=5`)
             .then((res) => {
                 this.setState({ productGame: res.data.content })
                 console.log(res.data)
                 this.setState({ currentPage: res.data.number })
+               
             })
             .catch((err) => {
                 console.log(err)
@@ -161,7 +173,7 @@ class Browse extends React.Component {
         if (this.state.categoryNow == "ALL") {
             this.getAllGame(this.state.currentPage)
         } else if (this.state.sortBy == "name" && this.state.orderBy == "asc") {
-            Axios.get(`${API_URL}/game/gamesNameAsc?page=${currentPage}&size=3`, {
+            Axios.get(`${API_URL}/game/gamesNameAsc?page=${currentPage}&size=5`, {
                 params: {
                     category: this.state.categoryNow
                 }
@@ -175,7 +187,7 @@ class Browse extends React.Component {
                     console.log(err)
                 })
         } else if (this.state.sortBy == "name" && this.state.orderBy == "desc") {
-            Axios.get(`${API_URL}/game/gamesNameDesc?page=${currentPage}&size=3`, {
+            Axios.get(`${API_URL}/game/gamesNameDesc?page=${currentPage}&size=5`, {
                 params: {
                     category: this.state.categoryNow
                 }
@@ -189,7 +201,7 @@ class Browse extends React.Component {
                     console.log(err)
                 })
         } else if (this.state.sortBy == "price" && this.state.orderBy == "asc") {
-            Axios.get(`${API_URL}/game/gamesPriceAsc?page=${currentPage}&size=3`, {
+            Axios.get(`${API_URL}/game/gamesPriceAsc?page=${currentPage}&size=5`, {
                 params: {
                     category: this.state.categoryNow
                 }
@@ -203,7 +215,7 @@ class Browse extends React.Component {
                     console.log(err)
                 })
         } else if (this.state.sortBy == "price" && this.state.orderBy == "desc") {
-            Axios.get(`${API_URL}/game/gamesPriceDesc?page=${currentPage}&size=3`, {
+            Axios.get(`${API_URL}/game/gamesPriceDesc?page=${currentPage}&size=5`, {
                 params: {
                     category: this.state.categoryNow
                 }
@@ -233,7 +245,7 @@ class Browse extends React.Component {
         } else if (this.state.categoryNow != "ALL") {
             this.showGameByCategory(currentPage)
         } else {
-            Axios.get(`${API_URL}/game/filter?page=${currentPage}&size=3`, {
+            Axios.get(`${API_URL}/game/filter?page=${currentPage}&size=5`, {
                 params: {
                     pageNo: currentPage,
                     sort: this.state.sortBy,
@@ -259,23 +271,24 @@ class Browse extends React.Component {
         this.setState({ search: value })
     }
 
-    getGameFilter = (currentPage) =>{
-        Axios.get(`${API_URL}/game/custom?page=${currentPage}&size=3&name=${this.state.search}`)
-        .then((res) =>{
-            console.log(res.data)
-            this.setState({productGame: res.data.content})
-        })
-        .catch(err =>{
-            console.log(err)
-        })
+    getGameFilter = (currentPage) => {
+        Axios.get(`${API_URL}/game/custom?page=${currentPage}&size=5&name=${this.state.search}`)
+            .then((res) => {
+                console.log(res.data)
+                this.setState({ productGame: res.data.content })
+            })
+            .catch(err => {
+                console.log(err)
+            })
     }
 
     render() {
-        const { currentPage } = this.state
-        const totalPage = this.state.productGame.length / 3
+        const { currentPage, totalPage } = this.state
+
         return (
             <div className="bg-color">
                 <div className="container bg-color">
+
                     <br />
                     <div className="row">
                         <div className="col-9">
