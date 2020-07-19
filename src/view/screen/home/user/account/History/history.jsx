@@ -135,7 +135,7 @@ class History extends React.Component {
         return (
             <div className="history-screen">
                 <div className="container">
-                    <h1>HISTORY</h1>
+                    <h1 style={{color:"#fff"}}>HISTORY</h1>
                     <table id="customers">
                         <tr>
                             <td>Status</td>

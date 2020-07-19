@@ -293,7 +293,7 @@ class Browse extends React.Component {
                     <div className="row">
                         <div className="col-9">
                             {this.renderGame()}
-                            <input type="button" className="prev-btn" value="Previous" disabled={currentPage === 0 ? true : false} onClick={(e) => { this.prevHandler(e) }} />
+                            <input type="button" className="prev-btn mr-5" value="Previous" disabled={currentPage === 0 ? true : false} onClick={(e) => { this.prevHandler(e) }} />
                             <input type="button" className="next-btn" value="Next" disabled={currentPage === totalPage ? true : false} onClick={(e) => { this.nextHandler(e) }} />
                         </div>
                         <div className="col-3">
