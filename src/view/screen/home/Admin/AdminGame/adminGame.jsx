@@ -47,6 +47,9 @@ class AdminGame extends React.Component {
             edition: "basic"
         },
         addCategory: "",
+        nambahCategory: {
+            categoryName: ""
+        },
         category: [],
         currentPage: 0,
         stolAwal: 0,
@@ -386,7 +389,16 @@ class AdminGame extends React.Component {
             })
     }
 
-
+    tambahCategory = () => {
+        Axios.post(`${API_URL}/category`, this.state.nambahCategory)
+            .then(res => {
+                this.getAllCategory()
+                swal("Success", "Add Category", "success")
+            })
+            .catch(err => {
+                console.log(err)
+            })
+    }
 
 
     render() {
@@ -534,6 +546,22 @@ class AdminGame extends React.Component {
                                                 }
                                             </h1>
                                             <input type="button" className="save-btn" value="SAVE GAME" onClick={this.addPaketGame} />
+                                        </div>
+                                    </cardBody>
+                                </card>
+                            </UncontrolledCollapse>
+                            
+                        </div>
+                        <div>
+                        <input type="button" style={{ width: "50%" }} className="prev-btn" value="ADD Category" id="toggler4" />
+                            <UncontrolledCollapse toggler="#toggler4">
+                                <card>
+                                    <cardBody>
+                                        <div className="product-form">
+                                            <div className="textbox">
+                                                <input type="text" placeholder="Category Name" onChange={(e) => this.inputHandler(e, "categoryName", "nambahCategory")} />
+                                            </div>
+                                            <input type="button" className="save-btn" value="SAVE CATEGORY" onClick={this.tambahCategory} />
                                         </div>
                                     </cardBody>
                                 </card>
