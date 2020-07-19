@@ -37,6 +37,8 @@ class ProductDetail extends React.Component {
     cartClick = (gameId) => {
         if (this.props.user.id == "") {
             swal("Failed", "Please login first", "error")
+        }else if(this.props.user.role == "admin"){
+            swal("Failed", "Admin cant buy", "error")
         } else {
             Axios.get(`${API_URL}/cart/${this.props.user.id}`)
                 .then((res) => {
