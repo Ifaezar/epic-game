@@ -185,3 +185,26 @@
   .reject-btn.active:hover{
     opacity: .7;
   }
+
+  .status-btn{
+    width: 20%;
+    height: 50px;
+    margin-top: 30px;
+    background:  #202020;
+    color: #fff;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-weight: 700;
+    transition: .3s linear;
+    
+  }
+  
+  .status-btn.active:hover{
+    opacity: .7;
+  }
+
+  .status{
+    text-align: end;
+  }

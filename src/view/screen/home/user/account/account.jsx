@@ -17,7 +17,8 @@ class Account extends React.Component {
             email: "",
             address: "",
             telp: 0
-        }
+        },
+        newPassword: ""
     }
 
     FileChangedHandler = (e) => {
@@ -101,6 +102,9 @@ class Account extends React.Component {
                             </div>
                             <div className="text-box">
                                 <p className="text-detail ">Telephone Number : {telp} </p>
+                            </div>
+                            <div className="change">
+                                <a href="/changePassword">Change Password</a>
                             </div>
                             <div className="mt-5">
                                 {

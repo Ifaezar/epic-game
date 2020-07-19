@@ -43,20 +43,6 @@ class Navbar extends React.Component {
                         </a>
                     </div>
                     <div className="collapse navbar-collapse nav-item justify-content-start text-color" >
-                        <ul >
-                            <li>
-                                <a href="www.google.com">STORE</a>
-                            </li>
-                            <li>
-                                <a href="www.google.com">NEWS</a>
-                            </li>
-                            <li>
-                                <a href="www.google.com"> FAQ</a>
-                            </li>
-                            <li>
-                                <a href="www.google.com">HELP</a>
-                            </li>
-                        </ul>
                     </div >
                     {
                         this.props.user.id ? (
@@ -127,7 +113,7 @@ class Navbar extends React.Component {
                                                     </DropdownItem>
                                                     <DropdownItem >
                                                         <div className="text-color mr-3">
-                                                            <a className="mr-3" href="/" >
+                                                            <a className="mr-3" href="/wishlist" >
                                                                 <span className="ml-2">Wishlist</span>
                                                             </a>
                                                         </div>
@@ -160,7 +146,7 @@ class Navbar extends React.Component {
                                 </Dropdown>
 
                                 <div>
-                                    <a className="text-color " href="www.google.com" > Get Epic Games</a>
+                                    <a className="text-color " href={`/product/${7}`} > Get Epic Games</a>
                                 </div>
                             </>
                         ) : (
@@ -172,7 +158,7 @@ class Navbar extends React.Component {
                                         </a>
                                     </div>
                                     <div>
-                                        <a className="text-color " href="www.google.com" > Get Epic Games</a>
+                                        <a className="text-color " href={`/product/${7}`} > Get Epic Games</a>
                                     </div>
                                 </>
                             )
@@ -189,26 +175,10 @@ class Navbar extends React.Component {
                                 <li>
                                     <a className="" href="/browse">Browse</a>
                                 </li>
+                                <li>
+                                    <a className="" href="/packet">Promo</a>
+                                </li>
                             </ul>
-                        </div>
-                        <div className="justify-content-end">
-                            <div className="navbar-search">
-                                <div className="input-icons">
-                                    <button className="btn-search">
-                                        <FontAwesomeIcon
-                                            className="mt-3"
-                                            icon={faSearch}>
-                                        </FontAwesomeIcon>
-                                    </button>
-                                    <input
-                                        className="input-field"
-                                        type="text"
-                                        placeholder="Search"
-                                        onChange={(e) => { this.props.searchProduct(e.target.value) }}
-                                    >
-                                    </input>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>

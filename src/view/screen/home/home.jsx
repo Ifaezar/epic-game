@@ -5,7 +5,7 @@ import "slick-carousel/slick/slick.css"
 import "slick-carousel/slick/slick-theme.css"
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import { faChevronLeft, faChevronRight, faGift } from "@fortawesome/free-solid-svg-icons";
 import { faFacebook, faTwitter, faYoutube } from "@fortawesome/free-brands-svg-icons"
 import { connect } from 'react-redux'
 import ButtonUI from "../../components/Button/Button.tsx"
@@ -17,12 +17,9 @@ class HomeScreen extends React.Component {
 
     state = {
         productGame: [],
-        category: [],
-        categoryNow: "",
-        sortBy: "",
-        conditionSort: 0
+        carouselGame:[]
     }
-    
+
     constructor(props) {
         super(props);
         this.next = this.next.bind(this);
@@ -31,19 +28,7 @@ class HomeScreen extends React.Component {
 
     componentDidMount() {
         this.getAllGame()
-        this.getAllCategory()
-    }
-
-
-    getAllCategory = () => {
-        Axios.get(`${API_URL}/category`)
-            .then((res) => {
-                this.setState({ category: res.data })
-
-            })
-            .catch((err) => {
-                console.log(err)
-            })
+        this.getAllGameSold()
     }
 
 
@@ -58,52 +43,72 @@ class HomeScreen extends React.Component {
             })
     }
 
-    renderGame = () => {
-
-        return (
-            <div className="row">
-                {this.state.productGame.map(val => {
-                    return (
-                        <div className="col-3">
-                            <Link
-                                to={`/product/${val.id}`}
-                                style={{ textDecoration: "none" }}>
-
-                                <div className="card col-3">
-                                    <img src={val.picture} alt="" />
-                                    <h1>{val.name}</h1>
-                                    <span>{val.developer}</span>
-                                    <h2>{val.price}</h2>
-
-                                    <h1>{this.props.user.search}</h1>
-                                </div>
-                            </Link>
-                        </div>
-                    )
-                })}
-            </div>
-        )
+    getAllGameSold = () => {
+        Axios.get(`${API_URL}/game/sold`)
+            .then((res) => {
+                this.setState({ carouselGame: res.data })
+                console.log(res.data)
+            })
+            .catch((err) => {
+                console.log(err)
+            })
     }
 
-    renderCategory = () => {
-        return (
-            <select
-                className="custom-text-input h-100 pl-3"
-                style={{ border: "none" }}
-                onChange={(e) => this.categoryHandler(e)}
-                onClick={(e) => { this.showGameByCategory(this.state.categoryNow) }}
-            >
-                <option value="" selected disabled hidden>Choose Category Game</option>
-                <option value="ALL" >All</option>
-                {
-                    this.state.category.map(val => {
-                        return (
-                            <option value={val.id}>{val.categoryName}</option>
-                        )
-                    })
-                }
-            </select>
-        )
+    renderCarouselItem = () => {
+        const settings = {
+            speed: 700,
+            autoplay: false,
+            infinite: true,
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            arrows: false,
+        }
+        if (this.state.carouselGame != "") {
+            for (let i = 0; i < 2; i++) {
+                return (
+                    <div className="row">
+                        <div className="col-9">
+                            <Slider ref={c => (this.slider = c)} {...settings}>
+                                <div>
+                                    <img src={this.state.carouselGame[i].picture}
+                                        alt=""
+                                        style={{ width: "65%", border: "none", height: "360px" }}
+                                    />
+                                </div>
+                                <div>
+                                    <img src={this.state.carouselGame[i + 1].picture}
+                                        alt=""
+                                        style={{ width: "65%", border: "none", height: "360px" }}
+                                    />
+                                </div>
+                            </Slider>
+                        </div>
+                        <div className="col-3">
+                            <div>
+                                <h1 style={{ color: "#fff" }}> Best Game</h1>
+                            </div>
+                            <div style={{ textAlign: "left" }}>
+                                <a onClick={this.previous}>
+                                    <FontAwesomeIcon
+                                        className="mt-3 mr-5"
+                                        icon={faChevronLeft}
+                                        style={{ color: "white", fontSize: "19px" }}>
+                                    </FontAwesomeIcon>
+                                </a>
+                                <a onClick={this.next}>
+                                    <FontAwesomeIcon
+                                        className="mt-3"
+                                        icon={faChevronRight}
+                                        style={{ color: "white", fontSize: "19px" }}>
+                                    </FontAwesomeIcon>
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+                )
+            }
+        }
     }
 
 
@@ -116,99 +121,49 @@ class HomeScreen extends React.Component {
 
 
     render() {
-        const settings = {
-            speed: 700,
-            autoplay: false,
-            infinite: true,
-            slidesToShow: 1,
-            slidesToScroll: 1,
-            arrows: false,
-        }
+
         return (
             <div className="bg-color">
-                <div className="container bg-color carousel" >
-                    <Slider ref={c => (this.slider = c)} {...settings}>
+                <div className="container bg-color " >
+                    <div className="container3 mb-5" >
+                        {this.renderCarouselItem()}
+                    </div>
+                    <div className="container2" style={{ color: "#fff", backgroundColor: "#2a2a2a" }}>
+                        <h1> <FontAwesomeIcon
+                            className="mt-3"
+                            icon={faGift}
+                            style={{ color: "white", fontSize: "36px" }}>
+                        </FontAwesomeIcon> Free Games</h1>
                         <div>
-                            <Link>
-                                <img src="https://cdn2.unrealengine.com/male-v-1920x1080-en-1920x1080-255566056.jpg"
-                                    alt=""
-                                    style={{ width: "100%", border: "none", height: "360px" }}
-                                />
+                            <Link to={`/product/${7}`} style={{ textDecoration: "none" }}>
+                                <img src="https://image-cdn.essentiallysports.com/wp-content/uploads/20200630004117/fortnite-switch-hero.jpg" style={{ height: "200px" }} alt="" />
                             </Link>
                         </div>
-                        <div>
-                            <Link>
-                                <img src="https://cdn1.epicgames.com/undefined/offer/ACOD_Portrait-552x576-64d0966bcf63c374163a5b920f68b253.jpg"
-                                    alt=""
-                                    style={{ width: "100%", border: "none", height: "360px" }}
-                                />
-                            </Link>
+                    </div>
+                    <br></br>
+                    <div className="container2" style={{ color: "#fff", backgroundColor: "#2a2a2a" }}>
+                        <h1>  Recently Upload</h1>
+                        <div className="row">
+                            <div className="col-4 card" style={{backgroundColor: "#2a2a2a"}}>
+                                <Link to={`/product/${6}`} style={{ textDecoration: "none" }}>
+                                    <img src="https://lh3.googleusercontent.com/HCUkD69MAHEOj84Yi7Kb5vxHpCePTsmQI4g9vYuVPUo-87cWE6ZZIk0tiyYzaiS9zaAFMTXRNYJaaRczRN-yQYw" style={{ height: "200px" }} alt="" />
+                                </Link>
+                            </div>
+                            <div className="col-4 card" style={{backgroundColor: "#2a2a2a"}}>
+                                <Link to={`/product/${8}`} style={{ textDecoration: "none" }} >
+                                    <img src="https://upload.wikimedia.org/wikipedia/en/d/dc/Watch_Dogs_Legion_cover_art.webp" style={{ height: "200px" }} alt="" />
+                                </Link>
+                            </div>
+                            <div className="col-4 card" style={{backgroundColor: "#2a2a2a"}}>
+                                <Link to={`/product/${5}`} style={{ textDecoration: "none" }}>
+                                    <img src="https://aliagamepc.com/wp-content/uploads/2019/01/assassins-creed-origin-1.jpg" style={{ height: "200px" }} alt="" />
+                                </Link>
+                            </div>
                         </div>
-                        <div>
-                            <Link>
-                                <img src="https://cdn1.epicgames.com/fn/offer/13BR_BPLaunch_EGS_S2_1200x1600-1200x1600-a39a6070e97ea0938d60ca3b19cbbe7b.jpg"
-                                    alt=""
-                                    style={{ width: "100%", border: "none", height: "360px" }}
-                                />
-                            </Link>
-                        </div>
-                    </Slider>
-                    <br>
-                    </br>
-                    <div style={{ textAlign: "center" }}>
-                        <a onClick={this.previous}>
-                            <FontAwesomeIcon
-                                className="mt-3"
-                                icon={faChevronLeft}
-                                style={{ color: "white", fontSize: "26px" }}>
-                            </FontAwesomeIcon>
-                        </a>
-                        <a onClick={this.next}>
-                            <FontAwesomeIcon
-                                className="mt-3"
-                                icon={faChevronRight}
-                                style={{ color: "white", fontSize: "26px" }}>
-                            </FontAwesomeIcon>
-                        </a>
                     </div>
                 </div>
                 <br />
-                <div className="bg-color2 " style={{ height: "500px" }}>
-                    <div className="container ">
-                        <div>
-                            <a href="https://www.facebook.com/epicgames">
-                                <FontAwesomeIcon
-                                    className="mt-3"
-                                    icon={faFacebook}
-                                    style={{ color: "white", fontSize: "26px" }}>
-                                </FontAwesomeIcon>
-                            </a>
-                            <a href="https://twitter.com/epicgames">
-                                <FontAwesomeIcon
-                                    className="mt-3"
-                                    icon={faTwitter}
-                                    style={{ color: "white", fontSize: "26px" }}>
-                                </FontAwesomeIcon>
-                            </a>
-                            <a href="youtube.com/epicgamesinc">
-                                <FontAwesomeIcon
-                                    className="mt-3"
-                                    icon={faYoutube}
-                                    style={{ color: "white", fontSize: "26px" }}>
-                                </FontAwesomeIcon>
-                            </a>
-                        </div>
-                        <div>
-                            <h4 style={{ color: "#e7e7e7" }}>Made By Epic Games</h4>
-                            <a href="www.google.com" style={{ color: "#e7e7e7" }}>
-                                Fortnite
-                            </a>
-                        </div>
-                        <div>
-                            <h5 style={{ color: "#e7e7e7" }}>© 2020, Epic Games, Inc. All rights reserved. Epic, Epic Games, the Epic Games logo, Fortnite, the Fortnite logo, Unreal, Unreal Engine, the Unreal Engine logo, Unreal Tournament, and the Unreal Tournament logo are trademarks or registered trademarks of Epic Games, Inc. in the United States of America and elsewhere. Other brands or product names are the trademarks of their respective owners. Non-US transactions through Epic Games International, S.à r.l.   </h5>
-                        </div>
-                    </div>
-                </div>
+
 
             </div>
         )

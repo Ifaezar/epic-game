@@ -3,7 +3,7 @@ import './productDetail.css';
 import Axios from "axios";
 import { API_URL } from "../../../../redux/API";
 import { connect } from 'react-redux'
-
+import swal from 'sweetalert'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHeart, } from "@fortawesome/free-solid-svg-icons";
 
@@ -13,6 +13,9 @@ class ProductDetail extends React.Component {
         cart: {
             edition: "basic",
             quantity: 1
+        },
+        wishlist: {
+            edition: "basic"
         }
     }
 
@@ -31,49 +34,69 @@ class ProductDetail extends React.Component {
             })
     }
 
-
-
     cartClick = (gameId) => {
-        Axios.get(`${API_URL}/cart/${this.props.user.id}`)
-            .then((res) => {
-                if (res.data.length == 0) {
-                    Axios.post(`${API_URL}/cart/addToCart/${this.props.user.id}/${gameId}`, this.state.cart)
-                        .then((res) => {
-                            console.log(res.data)
-                            this.getGameById()
+        if (this.props.user.id == "") {
+            swal("Failed", "Please login first", "error")
+        } else {
+            Axios.get(`${API_URL}/cart/${this.props.user.id}`)
+                .then((res) => {
+                    if (res.data.length == 0) {
+                        Axios.post(`${API_URL}/cart/addToCart/${this.props.user.id}/${gameId}`, this.state.cart)
+                            .then((res) => {
+                                console.log(res.data)
+                                this.getGameById()
+                                swal("Success", "Add to Cart", "success")
+                            })
+                            .catch((err) => {
+                                console.log(err)
+                            })
+                    } else {
+                        res.data.map((val, idx) => {
+                            if (gameId == val.game.id) {
+                                Axios.put(`${API_URL}/cart/addToCartSameId/${this.props.user.id}/${gameId}/${val.id}`, this.state.cart)
+                                    .then((res) => {
+                                        console.log(res.data)
+                                        this.getGameById()
+                                        swal("Success", "Add to Cart", "success")
+                                    })
+                                    .catch((err) => {
+                                        console.log(err)
+                                    })
+                            } else if ((idx + 1) == res.data.length) {
+                                Axios.post(`${API_URL}/cart/addToCart/${this.props.user.id}/${gameId}`, this.state.cart)
+                                    .then((res) => {
+                                        console.log(res.data)
+                                        this.getGameById()
+                                        swal("Success", "Add to Cart", "success")
+                                    })
+                                    .catch((err) => {
+                                        console.log(err)
+                                    })
+                            }
                         })
-                        .catch((err) => {
-                            console.log(err)
-                        })
-                } else {
-                    res.data.map((val, idx) => {
-                        if (gameId == val.game.id) {
-                            Axios.put(`${API_URL}/cart/addToCartSameId/${this.props.user.id}/${gameId}/${val.id}`, this.state.cart)
-                                .then((res) => {
-                                    console.log(res.data)
-                                    this.getGameById()
-                                })
-                                .catch((err) => {
-                                    console.log(err)
-                                })
-                        } else if ((idx + 1) == res.data.length) {
-                            Axios.post(`${API_URL}/cart/addToCart/${this.props.user.id}/${gameId}`, this.state.cart)
-                                .then((res) => {
-                                    console.log(res.data)
-                                    this.getGameById()
-                                })
-                                .catch((err) => {
-                                    console.log(err)
-                                })
-                        }
-                    })
 
-                }
-            })
-            .catch((err) => {
-                console.log(err)
-            })
+                    }
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+        }
 
+    }
+
+    wishlistClick = (gameId) => {
+        if (this.props.user.id == "") {
+            swal("Failed", "Please login first", "error")
+        } else {
+            Axios.post(`${API_URL}/wishlist/addTowishlist/${this.props.user.id}/${gameId}`, this.state.wishlist)
+                .then((res) => {
+                    console.log(res.data)
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+
+        }
     }
 
     render() {
@@ -119,7 +142,7 @@ class ProductDetail extends React.Component {
 
                             </div>
                             <div className="font-product mt-3">
-                                <a>
+                                <a onClick={() => { this.wishlistClick(game.id) }}>
                                     <FontAwesomeIcon
                                         className="font-product mt-3"
                                         icon={faHeart}

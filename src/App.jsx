@@ -29,6 +29,11 @@ import AdminPayment from './view/screen/home/Admin/AdminGame/adminPayment';
 import GameLibrary from './view/screen/home/user/account/GameLibrary/gameLibrary';
 import SendGame from './view/screen/home/user/account/GameLibrary/sendGame';
 import AdminReports from './view/screen/home/Admin/AdminGame/adminReports';
+import PacketGame from './view/screen/home/Product/packetGame';
+import BrowsePacket from './view/screen/home/Browse/browsePacket';
+import ChangePassword from './view/screen/home/user/account/ForgotPassword/changePassword';
+import wishlist from './view/screen/home/user/account/Cart/wishlist';
+import NavbarBottom from './view/components/navbar/navbarBottom';
 
 const cookieObject = new Cookie()
 
@@ -67,16 +72,20 @@ class App extends React.Component {
         <Switch>
           <Route exact path="/" component={HomeScreen} />
           <Route exact path="/browse" component={Browse} />
+          <Route exact path="/packet" component={BrowsePacket} />
           <Route exact path="/login" component={AuthScreen} />
           <Route exact path="/register" component={RegisterScreen} />
           <Route exact path="/forgotPassword" component={ForgotPassword} />
           <Route exact path="/newPassword/:email/:id" component={NewPassword} />
           <Route exact path="/product/:id" component={ProductDetail} />
+          <Route exact path="/packetGame/:id" component={PacketGame} />
           {this.renderUserRoute()}
           <Route exact path="/account" component={Account} />
           <Route exact path="/gameLibrary" component={GameLibrary} />
+          <Route exact path="/changePassword" component={ChangePassword} />
           <Route exact path="/sendGame/:gameLibraryId" component={SendGame} />
           <Route exact path="/cart" component={Cart} />
+          <Route exact path="/wishlist" component={wishlist} />
           <Route exact path="/history" component={History} />
           {this.renderAdminRoute()}
           <Route exact path="/admin/listgame" component={AdminGame} />
@@ -85,6 +94,7 @@ class App extends React.Component {
           <Route exact path="/admin/payment" component={AdminPayment} />
           <Route exact path="*" component={PageNotFound} />
         </Switch>
+        <NavbarBottom />
       </>
     );
   }

@@ -12,11 +12,12 @@ class AdminPayment extends React.Component {
         transactionId: 0,
         image: '',
         acceptDate: new Date(),
-        index :0,
-        gameLibrary:{
-            edition:"basic"
-        }
-
+        index: 0,
+        gameLibrary: {
+            edition: "basic"
+        },
+        statusAcc: "Accept",
+        statusPending: "pending"
 
     }
 
@@ -36,8 +37,8 @@ class AdminPayment extends React.Component {
         this.getAllTransaction()
     }
 
-    getAllTransaction = () => {
-        Axios.get(`${API_URL}/transaction`)
+    getAllTransactionAccept = () => {
+        Axios.get(`${API_URL}/transaction?name=${this.state.statusAcc}`)
             .then((res) => {
                 console.log(res.data)
                 this.setState({ transactionList: res.data })
@@ -46,6 +47,18 @@ class AdminPayment extends React.Component {
                 console.log(err)
             })
     }
+
+    getAllTransaction = () => {
+        Axios.get(`${API_URL}/transaction?name=${this.state.statusPending}`)
+            .then((res) => {
+                console.log(res.data)
+                this.setState({ transactionList: res.data })
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
+
 
     rejectHandler = () => {
         Axios.put(`${API_URL}/transaction/reject/${this.state.transactionId}`)
@@ -66,14 +79,15 @@ class AdminPayment extends React.Component {
                 console.log(res.data)
                 this.toggleModal()
                 this.getAllTransaction()
-                this.state.transactionList[this.state.index].transactionDetail.map(val =>{
+                this.state.transactionList[this.state.index].transactionDetail.map(val => {
                     Axios.post(`${API_URL}/gameLibrary/add/${this.state.transactionId}/${val.game.id}/${val.quantity}`, this.state.gameLibrary)
-                    .then((res) =>{
-                        console.log(res.data)
-                    })
-                    .catch((err) =>{
-                        console.log(err)
-                    })
+                        .then((res) => {
+                            console.log(res.data)
+                            this.getAllTransactionAccept()
+                        })
+                        .catch((err) => {
+                            console.log(err)
+                        })
                 })
             })
             .catch((err) => {
@@ -174,7 +188,16 @@ class AdminPayment extends React.Component {
     render() {
         return (
             <div className="container">
-                <h1>Ini list payment</h1>
+                <h1>Payment List</h1>
+                <div className="container row ">
+                    <div className="col-6 status">
+                        <input type="button" onClick={this.getAllTransaction} className="status-btn" value="Pending"/>
+                       
+                    </div>
+                    <div className="col-6">
+                    <input type="button" onClick={this.getAllTransactionAccept} className="status-btn" value="Accept"/>
+                    </div>
+                </div>
                 <table id="customers">
                     <tr>
                         <td>No</td>

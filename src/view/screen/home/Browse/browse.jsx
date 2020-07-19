@@ -3,11 +3,9 @@ import "./browse.css"
 import Axios from 'axios'
 import { API_URL } from '../../../../redux/API'
 import { connect } from 'react-redux'
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
-
 import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
 
 class Browse extends React.Component {
     state = {
@@ -16,7 +14,9 @@ class Browse extends React.Component {
         categoryNow: "ALL",
         sortBy: "ALL",
         orderBy: 0,
-        currentPage: 0
+        currentPage: 0,
+        search: ""
+
     }
 
     nextHandler = (e) => {
@@ -48,6 +48,7 @@ class Browse extends React.Component {
         this.getAllGame(this.state.currentPage)
         this.getAllCategory()
     }
+
 
     categoryHandler = (e) => {
         const { value } = e.target
@@ -127,8 +128,6 @@ class Browse extends React.Component {
                                                 </h2>
                                             )
                                     }
-
-                                    <h1>{this.props.user.search}</h1>
                                 </div>
                             </Link>
                         </div>
@@ -255,6 +254,21 @@ class Browse extends React.Component {
 
     }
 
+    searchProduct = (e) => {
+        const { value } = e.target
+        this.setState({ search: value })
+    }
+
+    getGameFilter = (currentPage) =>{
+        Axios.get(`${API_URL}/game/custom?page=${currentPage}&size=3&name=${this.state.search}`)
+        .then((res) =>{
+            console.log(res.data)
+            this.setState({productGame: res.data.content})
+        })
+        .catch(err =>{
+            console.log(err)
+        })
+    }
 
     render() {
         const { currentPage } = this.state
@@ -263,35 +277,61 @@ class Browse extends React.Component {
             <div className="bg-color">
                 <div className="container bg-color">
                     <br />
-                    <div>
-                        {this.renderCategory()}
+                    <div className="row">
+                        <div className="col-9">
+                            {this.renderGame()}
+                            <input type="button" className="prev-btn" value="Previous" disabled={currentPage === 0 ? true : false} onClick={(e) => { this.prevHandler(e) }} />
+                            <input type="button" className="next-btn" value="Next" disabled={currentPage === totalPage ? true : false} onClick={(e) => { this.nextHandler(e) }} />
+                        </div>
+                        <div className="col-3">
+                            <div className="navbar-search">
+                                <div className="input-icons">
+                                    <button className="btn-search">
+                                        <FontAwesomeIcon
+                                            className="mt-3"
+                                            icon={faSearch}>
+                                        </FontAwesomeIcon>
+                                    </button>
+                                    <input
+                                        className="input-field"
+                                        type="text"
+                                        placeholder="Search"
+                                        onChange={(e) => { this.searchProduct(e) }}
+                                        onKeyUp={() => this.getGameFilter(this.state.currentPage)}
+                                    >
+                                    </input>
+                                </div>
+                            </div>
+                            <div>
+                                {this.renderCategory()}
+                            </div>
+                            <div className="row">
+                                <div className="col-6">
+                                    <select
+                                        className="custom-text-input h-100 pl-3 select-option"
+                                        onClick={(e) => this.sortHandler(e)}
+                                    >
+                                        <option value="" selected disabled hidden>Sort By</option>
+                                        <option value="ALL" >All</option>
+                                        <option value="name" >Sort By Name</option>
+                                        <option value="price" >Sort By Price</option>
+                                    </select>
+                                </div>
+                                <div className="col-6">
+                                    <select
+                                        className="custom-text-input h-100 pl-3 select-option"
+                                        onChange={(e) => this.orderByHandler(e)}
+                                        onClick={() => { this.showSortGame(this.state.currentPage) }}
+                                    >
+                                        <option value="" selected disabled hidden>Sort By</option>
+                                        <option value="ALL" >All</option>
+                                        <option value="asc" >Order By Ascending</option>
+                                        <option value="desc" >Order By Descending</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        <select
-                            className="custom-text-input h-100 pl-3 select-option"
-                            onClick={(e) => this.sortHandler(e)}
-                        >
-                            <option value="" selected disabled hidden>Sort By</option>
-                            <option value="ALL" >All</option>
-                            <option value="name" >Sort By Name</option>
-                            <option value="price" >Sort By Price</option>
-                        </select>
-                        <select
-                            className="custom-text-input h-100 pl-3 select-option"
-                            onChange={(e) => this.orderByHandler(e)}
-                            onClick={() => { this.showSortGame(this.state.currentPage) }}
-                        >
-                            <option value="" selected disabled hidden>Sort By</option>
-                            <option value="ALL" >All</option>
-                            <option value="asc" >Order By Ascending</option>
-                            <option value="desc" >Order By Descending</option>
-
-                        </select>
-                    </div>
-                    {this.renderGame()}
-                    <input type="button" className="prev-btn" value="Previous" disabled={currentPage === 0 ? true : false} onClick={(e) => { this.prevHandler(e) }} />
-                    <input type="button" className="next-btn" value="Next" disabled={currentPage === totalPage +1 ? true : false} onClick={(e) => { this.nextHandler(e) }} />
-
                 </div>
             </div>
         )

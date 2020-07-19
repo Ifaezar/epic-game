@@ -17,10 +17,7 @@
     background-color: #121212;
   }
 
-  .carousel {
-    width:540px;
-    height:360px;
-  }
+  
  
 .slick-slide {
     height    : 320px;
@@ -48,11 +45,16 @@
 
 .bg-color2{
   background-color: #2a2a2a;
+  
+}
+
+.bottom{
+  margin-top: 52px;
 }
 
 .card {
   max-width: 200px;
-  background-color: #121212;
+  background-color: #2a2a2a;
   border: none;
   color: #fff;
   margin: auto;
@@ -91,3 +93,15 @@
   padding: 10px; 
   text-align: center; 
 } 
+
+.carousel-item{
+  width: 75%,;
+  border: none;
+   height: 360px }
+
+
+  .container2{
+    height: 300px;
+  }
+
+  
