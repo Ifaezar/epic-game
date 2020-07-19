@@ -33,7 +33,7 @@ class NewPassword extends React.Component {
     }
 
     savePassword = () =>{
-        Axios.put(`${API_URL}/users/editProfile`, this.state.userData)
+        Axios.put(`${API_URL}/users/newPassword`, this.state.userData)
         .then((res) =>{
             console.log(res.data)
             swal("Success", "Change Password Success", "success")
