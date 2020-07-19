@@ -34,11 +34,12 @@ class RegisterScreen extends React.Component {
         })
             .then((res) => {
                 console.log(res.data)
-                alert("berhasil regis")
                 swal("Success", "Register Success", "success")
+                
             })
             .catch((err) => {
                 console.log(err)
+                swal("Failed", err.response.data.message, "error")
             })
     }
 
